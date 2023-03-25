@@ -27,7 +27,7 @@ function send_link($email){
 
   $mail->Username = 'iit2021193@iiita.ac.in';
 
-  $mail->Password = '_Piltover123.';
+  $mail->Password = 'passwordhere';
 
   $mail->setFrom('iit2021193@iiita.ac.in', 'Anurag Singh');
 
