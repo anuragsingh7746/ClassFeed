@@ -1,103 +1,70 @@
 <?php
-require('../../server/connect.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+require('../../server/connect.php');
 require 'vendor/autoload.php';
 
 
 $email = $_GET['email'];
-
 $enroll = substr($email, 0, 10);
 
 
 function send_link($email){
-  
-  $verification_token = md5($email);
-
+  require('../../server/connect.php');
   $mail = new PHPMailer();
-
   $mail->isSMTP();
-
   $mail->Host = 'smtp.gmail.com';
   $mail->Port = 465;
-
   $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-
   $mail->SMTPAuth = true;
-
   $mail->Username = 'iit2021193@iiita.ac.in';
-
-  $mail->Password = 'passwordhere';
-
+  $mail->Password = '**passwordhere**';
   $mail->setFrom('iit2021193@iiita.ac.in', 'Anurag Singh');
-
   $mail->addReplyTo('iit2021193@iiita.ac.in', 'Anurag Singh');
-
   $mail->addAddress($email);
   $mail->isHTML(true);
-  //Set the subject line
+
   $mail->Subject = 'Email verification from ClassFeed';
 
-
-//The url you wish to send the POST request to
-$url = 'http://localhost/signup/register/register.php';
-
-//The data you want to send via POST
-$fields = [
-    'email'      => $email,
-    'token' => $verification_token,
-];
-
-//url-ify the data for the POST
-$fields_string = http_build_query($fields);
-
-//open connection
-$ch = curl_init();
-
-//set the url, number of POST vars, POST data
-curl_setopt($ch,CURLOPT_URL, $url);
-curl_setopt($ch,CURLOPT_POST, true);
-curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-
-//So that curl_exec returns the contents of the cURL; rather than echoing it
-curl_setopt($ch,CURLOPT_RETURNTRANSFER, true); 
-
-//execute post
-$result = curl_exec($ch);
-echo $result;
-
-
-
+  $expFormat = mktime(
+   date("H"), date("i"), date("s"), date("m") ,date("d")+1, date("Y")
+   );
+   $expDate = date("Y-m-d H:i:s",$expFormat);
+   $verification_token = md5($email);
+   $addKey = substr(md5(uniqid(rand(),1)),3,10);
+   $verification_token = $verification_token . $addKey;
 
   $email_template = "
   <h5>Verify you email to register for ClassFeed with the link given below</h5>
   <br>
   <a href='http://localhost/signup/register/register.php?token=$verification_token&email=$email'>http://localhost/signup/register/register.php?token=$verification_token&email=$email</a>
-  <a href='$result'>test</a>
+  <h5>DO NOT SHARE THIS LINK WITH ANYONE</h5>
 ";
 
-
-  //Read an HTML message body from an external file, convert referenced images to embedded,
-  //convert HTML into a basic plain-text alternative body
   $mail->Body = $email_template;
-  //$mail->msgHTML(file_get_contents('contents.html'), __DIR__);
 
-  $mail->send();
+  if(!$mail->send()){
+    echo "Error : 1";
 
+  }else{
 
+    $add_user = "INSERT INTO P2_Registration (`email` , `token`, `expiryDate`) VALUES ('$email', '$verification_token', '$expDate')";
+    if($conn->query($add_user)){
+      echo "Verification link sent!!";
+    }else {
+      echo "Error : 2";
+    }
+
+  }
 }
 
-send_link($email);
-//echo "Verification link sent successfully!!";
-//$check_student = "select enroll_no from P2_Student where enroll_no = '$enroll' ";
-//$result = $conn->query($check_student);
-//if($result->num_rows > 0){
-  //echo "User already exists!!";
-//}
-//else{
-  //send_link('$email');
-  //echo "Verification link sent!!";
-//}
+$check_student = "SELECT * FROM P2_Student WHERE enroll_no = '$enroll' ";
+$result = $conn->query($check_student);
+if($result->num_rows > 0){
+  echo "User already exists!!";
+}
+else{
+  send_link($email);
 
-
+}
 ?>
