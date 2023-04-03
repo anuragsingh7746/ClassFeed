@@ -1,13 +1,14 @@
 <?php
-require('../../server/connect.php');
-
+require('../../class/Student.php');
+$student = new Student();
+session_start();
 $email = $_GET['email'];
 $token = $_GET['token'];
 $currentDate = date("Y-m-d H:i:s");
 
-$check_token = "SELECT * FROM P2_Registration WHERE email = '$email' AND token = '$token' ";
-$result = $conn->query($check_token);
-
+$check_token = "SELECT * FROM P2_Verification WHERE email = '$email' AND token = '$token' ";
+$result = $student->fetch_query($check_token);
+$count = $student->count_row($check_token);
 ?>
 
         <!DOCTYPE html>
@@ -23,18 +24,45 @@ $result = $conn->query($check_token);
       crossorigin="anonymous"
     />
     <link href="register.css" rel="stylesheet" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../../pictures/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../../pictures/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="../../pictures/favicon-16x16.png"
+    />
+    <link rel="manifest" href="../../pictures/site.webmanifest" />
+    <script src="register.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   </head>
 
 <?php 
 
-if($result->num_rows === 1){
-    $row = $result->fetch_assoc();
-    if($row['expiryDate'] >= $currentDate ){
-
+if($count === 1){
+    if($result['expiryDate'] <= $currentDate ){
+      
       $username = substr($email, 0, 10);
       $batch = substr($username, 3, 4);
       $program = substr($username, 0, 1);
       $department = substr($username, 1, 2);
+      $_SESSION['username'] = $username;
+      $_SESSION['batch'] = $batch;
+      $_SESSION['program'] = $program;
+      $_SESSION['department'] = $department;
+      $_SESSION['email'] = $email;
+
+
 ?>
 
   <body class="text-center">
@@ -46,9 +74,7 @@ if($result->num_rows === 1){
         width="225"
         height="225"
       />
-      <h1 class="h3 mb-3 fw-normal">ClassFeed</h1>
-      
- <form action="">     
+      <h1 class="h3 mb-3 fw-normal">Register</h1>
   <div class="row mb-2">
       <div class="form-floating col-md-6">
         <input
@@ -68,8 +94,8 @@ if($result->num_rows === 1){
           id="floatingInput"
           name="username"
           placeholder="iit2021xxx"
-          value="<?php echo $username; ?>"
-          disabled
+          value="<?php echo strtoupper($username); ?>"
+          readonly="readonly"
         />
         <label for="floatingInput">Username</label>
       </div>
@@ -89,7 +115,7 @@ if($result->num_rows === 1){
           }else if($program == 'm'){
             echo "MTech.";
           }else echo "PhD" ?>" 
-          disabled
+          readonly="readonly"
         />
         <label for="floatingInput">Program</label>
         
@@ -103,7 +129,7 @@ if($result->num_rows === 1){
           name="batch"
           placeholder="202x"
           value="<?php echo $batch; ?>"
-          disabled
+          readonly="readonly"
         />
         <label for="floatingInput">Batch</label>
       </div>
@@ -114,15 +140,15 @@ if($result->num_rows === 1){
           class="form-control"
           id="floatingInput"
           name="department"
-          placeholder="IT/ECE/IIB"
+          placeholder="IT/ECE/IT-BI"
           value="<?php if($department == 'it'){
                           echo "IT";
           }else if($department == 'ib'){
                   echo "IT-BI";
-          }else if($department == 'ec'){
+          }else if($department == 'ce'){
                   echo "ECE";
           }else echo "Check"; ?>"
-          disabled
+         readonly="readonly"
         />
         <label for="floatingInput">Department</label>
       </div>
@@ -133,24 +159,25 @@ if($result->num_rows === 1){
    
       <div class="form-floating col-md-6">
         <input
-          type="text"
+          type="password"
           class="form-control"
           id="floatingInput"
           name="password"
-          placeholder="" 
+          placeholder="password" 
         />
         <label for="floatingInput">Password</label>
       </div>
       
       <div class="form-floating col-md-6">
         <input
-          type="text"
+          type="password"
           class="form-control"
           id="floatingInput"
           name="password_check"
-          placeholder=""
+          placeholder="password"
+          onkeyup="checkPass()"
         />
-        <label for="floatingInput">Re-enter Password</label>
+        <label for="floatingInput">Confirm Password</label>
       </div>
    </div> 
     
@@ -164,6 +191,8 @@ if($result->num_rows === 1){
         class="w-100 btn btn-lg btn-primary"
         id="button"
         type="submit"
+        onclick="submit2()"
+        disabled
       >
         Register
       </button>
@@ -171,7 +200,6 @@ if($result->num_rows === 1){
         Copyright &copy; 2023 ClassFeed<br />
         IIIT - Allahabad
       </p>
-</form>
     </main>
 
     <script
@@ -181,10 +209,11 @@ if($result->num_rows === 1){
     ></script>
   </body>
 </html>
-    
 <?php    
     
-    }  
-}else echo "errorehehhehe";
+    }
+    else echo "Token expired";  
 
+}
+else echo "Invalid Token";
 ?>

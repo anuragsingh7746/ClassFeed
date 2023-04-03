@@ -1,11 +1,11 @@
-function showHint(str) {
+function verifyEmail(str) {
   let button = document.getElementById('button');
   let pop = document.getElementById('pop');
   button.disabled = true;
   if (str.length == 0) {
+    button.disabled = false;
     pop.removeAttribute('hidden');
     pop.innerHTML = 'enter you email!!!';
-
     return;
   } else {
     var xmlhttp = new XMLHttpRequest();
