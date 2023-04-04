@@ -17,24 +17,6 @@ function checkPass() {
   }
 }
 
-function submit() {
-  let pop = document.getElementById('pop');
-  const name = document.getElementsByName('name');
-  const pass = document.getElementsByName('password');
-  let x = name[0].value;
-  let y = pass[0].value;
-
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      pop.removeAttribute('hidden');
-      pop.innerHTML = this.responseText;
-    }
-  };
-  xmlhttp.open('GET', 'submit.php?name=' + x + '&password=' + y, true);
-  xmlhttp.send();
-}
-
 function submit2() {
   let pop = document.getElementById('pop');
   const name = document.getElementsByName('name');

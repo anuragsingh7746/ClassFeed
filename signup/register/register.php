@@ -50,7 +50,7 @@ $count = $student->count_row($check_token);
 <?php 
 
 if($count === 1){
-    if($result['expiryDate'] <= $currentDate ){
+    if($result['expiryDate'] >= $currentDate ){
       
       $username = substr($email, 0, 10);
       $batch = substr($username, 3, 4);

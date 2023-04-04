@@ -9,10 +9,12 @@ $batch = $_SESSION['batch'];
 $department = strtoupper($_SESSION['department']);
 $program = $_SESSION['program'];
 $email = $_SESSION['email'];
-
+$hash = password_hash($password, PASSWORD_BCRYPT);
 if(isset($_SESSION['username'])){
   $submit = "INSERT INTO P2_Student (`enroll_no`, `name`, `dept_name`, `batch`, `program`) VALUES ('$username', '$name', '$department', '$batch', '$program')";
   $result = $student->run_query($submit);
+  $login = "INSERT INTO P2_Login (`enroll_no`, `hash`) VALUES ('$username', '$hash')";
+  $result = $student->run_query($login);
   $delete = "DELETE FROM P2_Verification where email = '$email'";
   $result = $student->run_query($delete);
 session_destroy();
