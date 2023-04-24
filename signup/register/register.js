@@ -17,6 +17,11 @@ function checkPass() {
   }
 }
 
+
+
+
+
+
 function submit2() {
   let pop = document.getElementById('pop');
   const name = document.getElementsByName('name');

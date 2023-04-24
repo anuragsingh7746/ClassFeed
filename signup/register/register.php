@@ -75,6 +75,8 @@ if($count === 1){
         height="225"
       />
       <h1 class="h3 mb-3 fw-normal">Register</h1>
+
+      <!-- <form id="myForm" onsubmit="return validateForm()"> -->
   <div class="row mb-2">
       <div class="form-floating col-md-6">
         <input
@@ -83,6 +85,8 @@ if($count === 1){
           id="floatingInput"
           name="name"
           placeholder="Anurag Singh" 
+          onkeydown = "checkname()"
+          ;
         />
         <label for="floatingInput">Full Name</label>
       </div>
@@ -192,10 +196,12 @@ if($count === 1){
         id="button"
         type="submit"
         onclick="submit2()"
+        
         disabled
       >
         Register
       </button>
+        <!-- </form> -->
       <p class="mt-5 mb-3 text-muted">
         Copyright &copy; 2023 ClassFeed<br />
         IIIT - Allahabad
