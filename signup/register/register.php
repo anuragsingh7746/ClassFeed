@@ -82,11 +82,11 @@ if($count === 1){
         <input
           type="text"
           class="form-control"
-          id="floatingInput"
+          id="floatingInput1"
           name="name"
           placeholder="Anurag Singh" 
-          onkeydown = "checkname()"
-          ;
+          oninput = "checkName()"
+          
         />
         <label for="floatingInput">Full Name</label>
       </div>
@@ -167,6 +167,7 @@ if($count === 1){
           class="form-control"
           id="floatingInput"
           name="password"
+          onkeyup="checkPass()"
           placeholder="password" 
         />
         <label for="floatingInput">Password</label>
@@ -189,8 +190,10 @@ if($count === 1){
    </div>
    
    
-   
-      <div class="alert alert-primary" role="alert" id="pop" hidden></div>
+<!--    
+      <div class="alert alert-primary" role="alert" id="pop" hidden></div> -->
+
+      <div class="alert alert-primary"  role="alert" id="pop" hidden ></div>
       <button
         class="w-100 btn btn-lg btn-primary"
         id="button"
