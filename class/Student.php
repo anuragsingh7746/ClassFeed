@@ -24,8 +24,8 @@ class Student extends DbConnection{
         $mail->Port = 465;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->SMTPAuth = true;
-        $mail->Username = 'iit2021193@iiita.ac.in';
-        $mail->Password = '*password_here*';
+        $mail->Username = 'dragonsh139@gmail.com';
+        $mail->Password = 'zsiyzwmydmmoacbb';
         $mail->setFrom('iit2021193@iiita.ac.in', 'Anurag Singh');
         $mail->addReplyTo('iit2021193@iiita.ac.in', 'Anurag Singh');
         $mail->addAddress($email);

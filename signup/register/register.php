@@ -75,14 +75,18 @@ if($count === 1){
         height="225"
       />
       <h1 class="h3 mb-3 fw-normal">Register</h1>
+
+      <!-- <form id="myForm" onsubmit="return validateForm()"> -->
   <div class="row mb-2">
       <div class="form-floating col-md-6">
         <input
           type="text"
           class="form-control"
-          id="floatingInput"
+          id="floatingInput1"
           name="name"
           placeholder="Anurag Singh" 
+          oninput = "checkName()"
+          
         />
         <label for="floatingInput">Full Name</label>
       </div>
@@ -163,6 +167,7 @@ if($count === 1){
           class="form-control"
           id="floatingInput"
           name="password"
+          onkeyup="checkPass()"
           placeholder="password" 
         />
         <label for="floatingInput">Password</label>
@@ -185,17 +190,21 @@ if($count === 1){
    </div>
    
    
-   
-      <div class="alert alert-primary" role="alert" id="pop" hidden></div>
+<!--    
+      <div class="alert alert-primary" role="alert" id="pop" hidden></div> -->
+
+      <div class="alert alert-primary"  role="alert" id="pop" hidden ></div>
       <button
         class="w-100 btn btn-lg btn-primary"
         id="button"
         type="submit"
         onclick="submit2()"
+        
         disabled
       >
         Register
       </button>
+        <!-- </form> -->
       <p class="mt-5 mb-3 text-muted">
         Copyright &copy; 2023 ClassFeed<br />
         IIIT - Allahabad

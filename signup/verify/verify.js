@@ -8,6 +8,12 @@ function verifyEmail(str) {
     pop.innerHTML = 'enter you email!!!';
     return;
   } else {
+    var  emailRegex = /^[a-zA-Z0-9._%+-]+@iiita\.ac\.in$/;
+    if (!emailRegex.test(str)) {
+       alert("Please enter a valid email address ending with @iiita.ac.in");
+       window.location.reload();
+      return false;
+    }
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
@@ -22,3 +28,4 @@ function verifyEmail(str) {
     xmlhttp.send();
   }
 }
+
