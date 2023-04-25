@@ -4,7 +4,7 @@ class DbConnection{
 
     private $host = 'localhost';
     private $user = 'root';
-    private $pass = '_Sumit1.';
+    private $pass = '_Mysqllocalsecured1.';
     private $db = 'feedback_system_3.0';
 
     protected $conn;
