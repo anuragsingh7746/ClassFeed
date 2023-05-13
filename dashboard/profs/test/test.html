@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Feedback Chart</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <canvas id="feedbackChart"></canvas>
+
+    <script>
+      // AJAX request to fetch feedback data
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'fetch_feedback.php', true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var feedbackData = JSON.parse(xhr.responseText);
+
+          if (feedbackData.length === 0) {
+            console.error('No feedback data found.');
+            return;
+          }
+
+          // Extract course names and feedback counts
+          var courseNames = feedbackData.map(function (item) {
+            return item.courseName;
+          });
+          var feedbackCounts = feedbackData.map(function (item) {
+            return item.feedbackCount;
+          });
+
+          console.log(courseNames); // Debugging information
+          console.log(feedbackCounts); // Debugging information
+
+          // Create chart
+          var ctx = document.getElementById('feedbackChart').getContext('2d');
+          var feedbackChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: courseNames,
+              datasets: [
+                {
+                  label: 'Number of Feedback',
+                  data: feedbackCounts,
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  stepSize: 1,
+                },
+              },
+            },
+          });
+        } else {
+          console.error('Request failed. Status:', xhr.status);
+        }
+      };
+      xhr.send();
+    </script>
+  </body>
+</html>

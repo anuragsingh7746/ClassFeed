@@ -11,10 +11,11 @@ $program = $_SESSION['program'];
 $email = $_SESSION['email'];
 $hash = password_hash($password, PASSWORD_BCRYPT);
 $pseudo_name = md5($username);
+$role = "student";
 if(isset($_SESSION['username'])){
   $submit = "INSERT INTO P2_Student (`enroll_no`, `name`, `dept_name`, `batch`, `program`) VALUES ('$username', '$name', '$department', '$batch', '$program')";
   $result = $student->run_query($submit);
-  $login = "INSERT INTO P2_Login (`enroll_no`, `hash`) VALUES ('$username', '$hash')";
+  $login = "INSERT INTO P2_Login (`login_id`, `hash`, `role`) VALUES ('$username', '$hash', '$role')";
   $result = $student->run_query($login);
   $mapping = "INSERT INTO P2_Mapping (`enroll_no`, `pseudo_name`) VALUES ('$username','$pseudo_name')";
   $result = $student->run_query($mapping);

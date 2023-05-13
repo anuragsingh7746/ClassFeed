@@ -1,0 +1,17 @@
+.form-verify {
+  max-width: 430px;
+  padding: 15px;
+}
+
+.form-verify .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-verify input[type='text'] {
+  margin-bottom: 5px;
+  margin-left: 0px;
+}
+
+label {
+  margin-left: 10px;
+}

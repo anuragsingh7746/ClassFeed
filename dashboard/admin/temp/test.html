@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Upload Excel File</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <form method="post" enctype="multipart/form-data" id="upload-form">
+      <input type="file" name="file" id="file" />
+      <button type="submit" id="submit-btn">Upload</button>
+    </form>
+    <div id="result"></div>
+    <script>
+      $(document).ready(function () {
+        $('#upload-form').submit(function (event) {
+          event.preventDefault();
+
+          // Get form data
+          var formData = new FormData($(this)[0]);
+
+          // Send AJAX request
+          $.ajax({
+            url: 'test.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+              $('#result').html(data);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

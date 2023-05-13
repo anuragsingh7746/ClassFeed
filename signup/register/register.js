@@ -1,6 +1,6 @@
-let   flag2=0;
-let   flag1=0;
-let   flag3=0;
+let flag2 = 0;
+let flag1 = 0;
+let flag3 = 0;
 // let  button = document.getElementById('button');
 function checkPass() {
   // const name = document.getElementsByName('name');
@@ -33,37 +33,29 @@ function checkPass() {
   let x = pass[0].value;
   let z = name[0].value;
 
-
-
-  if(x.length==0){
-    flag3=0;
-  }
-  else{
-    flag3=1;
-  }
-  
-  if(x!=y ){
-    flag2=0;
-    
-    document.getElementById('pop').hidden=false;
-    document.getElementById('pop').innerHTML='Password Do Not Match';
-    
-  }
-  else{
-    document.getElementById('pop').hidden=true;
-    flag2=1;
-  }
-  if(flag1==0 ||flag2 ==0||flag3==0){
-    button.disabled=true;
-  }
-  else{
-    button.disabled=false;
+  if (x.length == 0) {
+    flag3 = 0;
+  } else {
+    flag3 = 1;
   }
 
-  
+  if (x != y) {
+    flag2 = 0;
+
+    document.getElementById('pop').hidden = false;
+    document.getElementById('pop').innerHTML = 'Password Do Not Match';
+  } else {
+    document.getElementById('pop').hidden = true;
+    flag2 = 1;
+  }
+  if (flag1 == 0 || flag2 == 0 || flag3 == 0) {
+    button.disabled = true;
+  } else {
+    button.disabled = false;
+  }
 }
 
-function checkName(){
+function checkName() {
   const name = document.getElementsByName('name');
   const pass = document.getElementsByName('password');
   const pass_check = document.getElementsByName('password_check');
@@ -71,39 +63,29 @@ function checkName(){
   let y = pass_check[0].value;
   let x = pass[0].value;
   let z = name[0].value;
-  
+
   // let  flag1=0, flag2=0;
 
-  if (z.length==0){
-    flag1=0;
-    document.getElementById('pop').hidden=false;
-    document.getElementById('pop').innerHTML='username should not be empty';
-    
+  if (z.length == 0) {
+    flag1 = 0;
+    document.getElementById('pop').hidden = false;
+    document.getElementById('pop').innerHTML = 'username should not be empty';
+  } else {
+    document.getElementById('pop').hidden = true;
+    flag1 = 1;
   }
-  else{
-    document.getElementById('pop').hidden=true;
-    flag1=1;
+  if (flag1 == 0 || flag2 == 0 || flag3 == 0) {
+    button.disabled = true;
+  } else {
+    button.disabled = false;
   }
-  if(flag1==0 || flag2 ==0 ||flag3==0){
-    button.disabled=true;
-  }
-  else{
-    button.disabled=false;
-  }
-  
-
 }
-
-
-
-
-
-
 
 function submit2() {
   let pop = document.getElementById('pop');
   const name = document.getElementsByName('name');
   const pass = document.getElementsByName('password');
+  const button = document.getElementById('button');
   let x = name[0].value;
   let y = pass[0].value;
 
@@ -119,10 +101,16 @@ function submit2() {
     success: function (response) {
       console.log(response);
       pop.removeAttribute('hidden');
-      pop.innerHTML = response;
+      pop.innerHTML = response + '<br>' + 'Redirecting...';
+      button.disabled = true;
+      setTimeout(redirect, 2000);
     },
     error: function (xhr, status, error) {
       console.log('Error:', error);
     },
   });
+}
+
+function redirect() {
+  document.location.href = '../../index.html';
 }

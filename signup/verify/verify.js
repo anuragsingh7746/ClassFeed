@@ -5,13 +5,13 @@ function verifyEmail(str) {
   if (str.length == 0) {
     button.disabled = false;
     pop.removeAttribute('hidden');
-    pop.innerHTML = 'enter you email!!!';
+    pop.innerHTML = 'Email field is required!!';
     return;
   } else {
-    var  emailRegex = /^[a-zA-Z0-9._%+-]+@iiita\.ac\.in$/;
+    var emailRegex = /^[a-zA-Z0-9._%+-]+@iiita\.ac\.in$/;
     if (!emailRegex.test(str)) {
-       alert("Please enter a valid email address ending with @iiita.ac.in");
-       window.location.reload();
+      alert('Please enter a valid email address ending with @iiita.ac.in');
+      window.location.reload();
       return false;
     }
     var xmlhttp = new XMLHttpRequest();
@@ -28,4 +28,3 @@ function verifyEmail(str) {
     xmlhttp.send();
   }
 }
-

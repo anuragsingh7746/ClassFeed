@@ -52,7 +52,7 @@ class Student extends DbConnection{
             $email_template = "
             <h5>Reset Password link for ClassFeed</h5>
             <br>
-            <a href='http://localhost/signup/register/register.php?token=$verification_token&email=$email'>http://localhost/signup/register/register.php?token=$verification_token&email=$email</a>
+            <a href='http://localhost/signup/forgot/reset.php?token=$verification_token&email=$email'>http://localhost/signup/forgot/reset.php?token=$verification_token&email=$email</a>
             <h5>DO NOT SHARE THIS LINK WITH ANYONE</h5>
             ";
 
@@ -73,12 +73,18 @@ class Student extends DbConnection{
                 }
             }
             else if($flag == 1){
+                $add_user = "INSERT INTO P2_Verification (`email` , `token`, `expiryDate`) VALUES ('$email', '$verification_token', '$expDate')";
+                if($this->conn->query($add_user)){
+                echo "Reset link sent!!";
+                }else {
+                echo "Error : 2";
 
-            }
+                
+                }
 
             
         }
-    }
+    }}
 
 
     public function fetch_query($sql_query){
