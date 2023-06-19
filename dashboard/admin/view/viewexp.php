@@ -1,6 +1,15 @@
+<?php
+include('../../../server/db.php');
+  // Set session
+session_start();
+$feedback_id = $_GET['feedback_id'];
+$answers = $connection->query("SELECT * FROM P2_Feedback where feedback_id = '$feedback_id'")->fetchAll();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ClassFeed</title>
@@ -13,7 +22,6 @@
 
 
     <link href="../style.css" rel="stylesheet" />
-    <link href="../add/add.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
   </head>
 
@@ -27,7 +35,7 @@
 
             <ul class="list-unstyled px-2">
                 <li class=""><a href="../index.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li class=""><a href="view.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> View Feedback</a></li>
+                <li class="active"><a href="../view/view.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> View Feedback</a></li>
             </ul>
             <hr class="h-color mx-2" style="color:black;">
 
@@ -68,7 +76,7 @@
                         Admin
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                          <li><a class="dropdown-item" href="#">Settings</a></li>
+                          <li><a class="dropdown-item" href="../settings/settings.php">Settings</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="Javascript:logout()">Logout</a></li>
                         </ul>
@@ -81,38 +89,199 @@
                   </div>
                 </div>
               </nav>
+              <div class="dashboard-content">
+<div class="container mt-5">
+        <h2 class="text-center mb-5">Detailed View</h2>
 
-              <div class="dashboard-content center">
+<table class="table table-bordered md-5"style="width:95%" >
+<tr>
+    <th>Questions</th>
+    <th>Answers</td>
+  </tr>
+  <tr>
+    <th>How well did you achieve this learning goal in this course?</th>
+    <td><?php 
 
-<main class="form-verify w-100 m-auto text-center">
-                <!-- <img class="mb-4" src="https://upload.wikimedia.org/wikipedia/en/2/2e/Indian_Institute_of_Information_Technology%2C_Allahabad_Logo.png" alt="" width="225" height="225" /> -->
-                <h1 class="h3 mb-3 fw-normal">Change Password</h1>
-        
-                <div class="row mb-2">
-                    <div class="form-floating col-md-14">
-                        <input type="password" class="form-control" id="floatingInput" name="password" placeholder="pass" oninput="checkPass()" />
-                        <label for="floatingInput">New Password</label>
-                    </div>
-                </div>
-                 <div class="row mb-2">
-                    <div class="form-floating col-md-14">
-                        <input type="password" class="form-control" id="floatingInput" name="password_check" placeholder="pass" onkeyup="checkPass()"/>
-                        <label for="floatingInput">Confirm Password</label>
-                    </div>
-                </div>
+switch ($answers[0]['Q1']) {
+  case "1":
+    echo "Not well at all";
+    break;
+  case "2":
+    echo "Slightly Well";
+    break;
+  case "3":
+    echo "Very Well";
+    break;
+case "4":
+    echo "Extremely well";
+    break;
+    
+  default:
+    echo "N/A";
+}
+?>
 
-                <div class="alert alert-primary" role="alert" id="pop" hidden></div>
-        <button class="w-100 btn btn-lg btn-primary" id="button" type="submit" onclick="submit2()" disabled>
-            Change Password
-        </button>
-        
+</td>
+  </tr>
+  <tr>
+    <th>How useful were the assignments from this instructor for your learning in the course?</th>
+    <td><?php 
 
-        <p class="mt-5 mb-3 text-muted">
-            Copyright &copy; 2023 ClassFeed<br />
-            IIIT - Allahabad
-        </p>
-       </main>
+switch ($answers[0]['Q2']) {
+  case "1":
+    echo "Not well at all";
+    break;
+  case "2":
+    echo "Slightly Well";
+    break;
+  case "3":
+    echo "Very Well";
+    break;
+case "4":
+    echo "Extremely well";
+    break;
+    
+  default:
+    echo "N/A";
+}
+?></td>
+  </tr>
+  <tr>
+    <th>How prepared was this instructor for section meetings?</th>
+    <td><?php 
 
+switch ($answers[0]['Q3']) {
+  case "1":
+    echo "Not well at all";
+    break;
+  case "2":
+    echo "Slightly Well";
+    break;
+  case "3":
+    echo "Very Well";
+    break;
+case "4":
+    echo "Extremely well";
+    break;
+    
+  default:
+    echo "N/A";
+}
+?></td>
+  </tr>
+<tr>
+    <th>How organized was this course?</th>
+    <td><?php 
+
+switch ($answers[0]['Q4']) {
+  case "1":
+    echo "Not well at all";
+    break;
+  case "2":
+    echo "Slightly Well";
+    break;
+  case "3":
+    echo "Very Well";
+    break;
+case "4":
+    echo "Extremely well";
+    break;
+    
+  default:
+    echo "N/A";
+}
+?></td>
+  </tr>
+<tr>
+    <th>Overall, how would you describe the quality of the instruction in this course?</th>
+    <td><?php 
+
+switch ($answers[0]['Q5']) {
+  case "1":
+    echo "Not well at all";
+    break;
+  case "2":
+    echo "Slightly Well";
+    break;
+  case "3":
+    echo "Very Well";
+    break;
+case "4":
+    echo "Extremely well";
+    break;
+    
+  default:
+    echo "N/A";
+}
+?></td>
+  </tr>
+<tr>
+    <th>Would you like to provide any other comments about this course?</th>
+    <td><?php echo $answers[0]['comment']; ?></td>
+  </tr>
+</table>
+    </div>
+    <!-- jQuery + Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#records-limit').change(function () {
+                $('form').submit();
+            })
+$('#course_id').change(function () {
+                $('form').submit();
+            })
+$('#year').change(function () {
+                $('form').submit();
+            })
+$('#instructor').change(function () {
+                $('form').submit();
+            })
+
+        });
+
+$(".open-btn").on('click' , function(){
+            $(".sidebar").addClass('active');
+        });
+
+        $(".close-btn").on('click' , function(){
+            $(".sidebar").removeClass('active');
+        });
+
+function logout() {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      window.location.href = '../../../index.html';
+    }
+  };
+  xmlhttp.open('GET', '../logout.php', true);
+  xmlhttp.send();
+}
+
+
+document.onreadystatechange = () => {
+  if (document.readyState === 'interactive') {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let check = this.responseText;
+        if (check == 'false') {
+          window.location.href = '../../../index.html';
+        } else {
+          console.log(this.responseText);
+          const first = this.responseText.charAt(0).toUpperCase();
+          const result = first + this.responseText.slice(1);
+          document.getElementById('navbarDropdown').innerHTML = '<i class="fas fa-user"></i> ' + 'Admin';
+        }
+      }
+    };
+    xmlhttp.open('GET', '../admin.php', true);
+    xmlhttp.send();
+  }
+};
+
+    </script>
 
 
 </div>
@@ -126,94 +295,5 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <script>
-function logout() {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      window.location.href = '../../../index.html';
-    }
-  };
-  xmlhttp.open('GET', '../logout.php', true);
-  xmlhttp.send();
-}
-
-document.onreadystatechange = () => {
-  if (document.readyState === 'interactive') {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        let check = this.responseText;
-        if (check == 'false') {
-          window.location.href = '../../../index.html';
-        } else {
-          console.log(this.responseText);
-        }
-      }
-    };
-    xmlhttp.open('GET', '../admin.php', true);
-    xmlhttp.send();
-  }
-};
-
-$(".open-btn").on('click' , function(){
-            $(".sidebar").addClass('active');
-        });
-
-        $(".close-btn").on('click' , function(){
-            $(".sidebar").removeClass('active');
-        });
-
-
-
-function checkPass() {
-  const pass = document.getElementsByName('password');
-  const pass_check = document.getElementsByName('password_check');
-  const button = document.getElementById('button');
-  let y = pass_check[0].value;
-  let x = pass[0].value;
-
-  if (x != y && y != '') {
-    document.getElementById('pop').hidden = false;
-    document.getElementById('pop').innerHTML = 'Password Do Not Match';
-    button.disabled = true;
-  } else {
-    document.getElementById('pop').hidden = true;
-
-    button.disabled = false;
-  }
-}
-
-function submit2() {
-  let pop = document.getElementById('pop');
-  const pass = document.getElementsByName('password');
-  const button = document.getElementById('button');
-  let y = pass[0].value;
-
-  const url = 'submit.php';
-  const data = {
-    password: y,
-  };
-  $.ajax({
-    url: url,
-    method: 'POST',
-    data: data,
-    success: function (response) {
-      console.log(response);
-      pop.removeAttribute('hidden');
-      pop.innerHTML = response + '<br>' + 'Redirecting...';
-      button.disabled = true;
-      setTimeout(redirect, 2000);
-    },
-    error: function (xhr, status, error) {
-      console.log('Error:', error);
-    },
-  });
-}
-
-function redirect() {
-  document.location.href = '../admin.html';
-}
-    </script>
    </body>
 </html>

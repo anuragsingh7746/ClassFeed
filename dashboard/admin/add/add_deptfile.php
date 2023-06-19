@@ -2,15 +2,8 @@
 // Include the PhpSpreadsheet library
 require 'vendor/autoload.php';
 
+require('../../../server/connect.php');
 // Database credentials
-$dbhost = 'localhost';
-$dbuser = 'root';
-$dbpass = '_Mysqllocalsecured1.';
-$dbname = 'feedback_system_3.0';
-
-// Connect to MySQL database
-$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
 // Check connection
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());

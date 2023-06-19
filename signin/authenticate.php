@@ -11,7 +11,7 @@ $hash = $result['hash'];
 $role = $result['role'];
 if(password_verify($password, $hash)  &&  $role == 'student'){
     $_SESSION['enroll_no'] = $username;
-    header("Location: ../dashboard/student/student.html");
+    header("Location: ../dashboard/student/student.php");
 }
 else if(password_verify($password, $hash)  &&  $role == 'professor'){
     $name = "SELECT ID from P2_Instructor where email_id = '$username'";
@@ -21,7 +21,7 @@ else if(password_verify($password, $hash)  &&  $role == 'professor'){
 }
 else if(password_verify($password, $hash)  &&  $role == 'admin'){
     $_SESSION['enroll_no'] = $username;
-    header("Location: ../dashboard/admin/admin.html");
+    header("Location: ../dashboard/admin/index.php");
 }
 else header("Location: ../index.html");
 ?>

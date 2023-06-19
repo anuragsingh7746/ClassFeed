@@ -1,13 +1,7 @@
 <?php
 // Connect to MySQL database
-         $servername = "localhost";
-        $username = "root";
-        $password = "_Mysqllocalsecured1.";
-        $dbname = "feedback_system_3.0";
-
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
-        // Check connection
+require('../../../server/connect.php');
+                 // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }

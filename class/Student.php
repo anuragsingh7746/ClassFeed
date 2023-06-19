@@ -25,7 +25,7 @@ class Student extends DbConnection{
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->SMTPAuth = true;
         $mail->Username = 'dragonsh139@gmail.com';
-        $mail->Password = 'key here';
+        $mail->Password = 'zsiyzwmydmmoacbb';
         $mail->setFrom('iit2021193@iiita.ac.in', 'Anurag Singh');
         $mail->addReplyTo('iit2021193@iiita.ac.in', 'Anurag Singh');
         $mail->addAddress($email);
@@ -39,11 +39,12 @@ class Student extends DbConnection{
         $addKey = substr(md5(uniqid(rand(),1)),3,10);
         $verification_token = $verification_token . $addKey;
         
+
         if($flag == 0){
             $email_template = "
             <h5>Verify you email to register for ClassFeed with the link given below</h5>
             <br>
-            <a href='http://localhost/signup/register/register.php?token=$verification_token&email=$email'>http://localhost/signup/register/register.php?token=$verification_token&email=$email</a>
+            <a href='http://localhost/signup/register/register.php?token=$verification_token&email=$email'>http://fcsl.iiita.ac.in/Project2/signup/register/register.php?token=$verification_token&email=$email</a>
             <h5>DO NOT SHARE THIS LINK WITH ANYONE</h5>
             ";
 
@@ -52,11 +53,12 @@ class Student extends DbConnection{
             $email_template = "
             <h5>Reset Password link for ClassFeed</h5>
             <br>
-            <a href='http://localhost/signup/forgot/reset.php?token=$verification_token&email=$email'>http://localhost/signup/forgot/reset.php?token=$verification_token&email=$email</a>
+            <a href='http://localhost/signup/forgot/forgot.php?token=$verification_token&email=$email'>https://fcsl.iiita.ac.in/Project2/signup/forgot/forgot.php?token=$verification_token&email=$email</a>
             <h5>DO NOT SHARE THIS LINK WITH ANYONE</h5>
             ";
 
         }
+
 
         $mail->Body = $email_template;
 

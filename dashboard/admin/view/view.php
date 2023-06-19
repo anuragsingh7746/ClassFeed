@@ -9,24 +9,61 @@ include('../../../server/db.php');
   $limit = isset($_SESSION['records-limit']) ? $_SESSION['records-limit'] : 5;
   $page = (isset($_GET['page']) && is_numeric($_GET['page']) ) ? $_GET['page'] : 1;
   $paginationStart = ($page - 1) * $limit;
-  $year = date('Y');
 if(isset($_POST['course_id'])){
       $_SESSION['course_id'] = $_POST['course_id'];
-  }
+}
+if(isset($_POST['year'])){
+      $_SESSION['year'] = $_POST['year'];
+}
+if(isset($_POST['instructor'])){
+      $_SESSION['instructor'] = $_POST['instructor'];
+}
+
   if(isset($_SESSION['course_id']) ){
     $_SESSION['course_id'] = isset($_SESSION['course_id']) ? $_SESSION['course_id'] : $_POST['course_id'];
     $course = $_SESSION['course_id'];
-    $ID = $_SESSION['enroll_no'];
-$sql = "SELECT sec_id FROM P2_Teaches WHERE ID = '$ID' AND year = '$year' AND course_id = '$course'";
-$result1 = $connection->query($sql)->fetchAll();
-$sec = $result1[0]['sec_id'];
-
-  $authors = $connection->query("SELECT t.course_id, t.sec_id, t.semester, t.year, tk.enroll_no, m.pseudo_name, f.feedback_id, f.comment, f.rating FROM ( SELECT * FROM P2_Teaches WHERE course_id = '$course' AND ID = '$ID' AND year = '$year' ) t JOIN ( SELECT * FROM P2_Takes WHERE sec_id = '$sec' ) tk ON t.course_id = tk.course_id AND t.semester = tk.semester AND t.year = tk.year JOIN P2_Mapping m ON tk.enroll_no = m.enroll_no JOIN P2_Feedback f ON m.pseudo_name = f.pseudo_name AND t.course_id = f.course_id AND t.year = f.year ORDER BY rating LIMIT $paginationStart, $limit")->fetchAll();
+    $year = $_SESSION['year'];
+    if(!isset($_SESSION['instructor'])) {
+$authors = $connection->query("SELECT feedback_id, course_id, pseudo_name, year, comment, rating FROM P2_Feedback WHERE course_id = '$course' AND year ='$year' ORDER BY rating LIMIT $paginationStart, $limit")->fetchAll();
   // Get total records
-  $sql = $connection->query("SELECT count(f.feedback_id) AS id FROM ( SELECT * FROM P2_Teaches WHERE course_id = '$course' AND ID = '$ID' AND year = '$year' ) t JOIN ( SELECT * FROM P2_Takes WHERE sec_id = '$sec' ) tk ON t.course_id = tk.course_id AND t.semester = tk.semester AND t.year = tk.year JOIN P2_Mapping m ON tk.enroll_no = m.enroll_no JOIN P2_Feedback f ON m.pseudo_name = f.pseudo_name AND t.course_id = f.course_id AND t.year = f.year")->fetchAll();
+  $sql = $connection->query("SELECT count(feedback_id) AS id FROM P2_Feedback WHERE course_id = '$course' AND year ='$year'")->fetchAll();
   $allRecrods = $sql[0]['id'];
-  
+
+    }else {
+      $ID = $_SESSION['instructor'];
+      $year = $_SESSION['year'];
+$authors = $connection->query("SELECT feedback_id, course_id, pseudo_name, year, comment, rating FROM P2_Feedback NATURAL JOIN P2_Teaches WHERE course_id = '$course' AND year ='$year' AND ID ='$ID' ORDER BY rating  LIMIT $paginationStart, $limit")->fetchAll();
+  // Get total records
+  $sql = $connection->query("SELECT count(feedback_id) AS id FROM P2_Feedback NATURAL JOIN P2_Teaches WHERE course_id = '$course' AND year ='$year' AND ID ='$ID' ")->fetchAll();
+ $allRecrods = $sql[0]['id'];
+
+    } 
   }
+
+
+  else if(isset($_SESSION['instructor']) ){
+$ID = $_SESSION['instructor'];
+
+    $year = $_SESSION['year'];
+if(!isset($_SESSION['course'])) {
+$authors = $connection->query("SELECT feedback_id, course_id, pseudo_name, year, comment, rating FROM P2_Feedback NATURAL JOIN P2_Teaches WHERE ID = '$ID' AND year ='$year' ORDER BY rating LIMIT $paginationStart, $limit")->fetchAll();
+  // Get total records
+  $sql = $connection->query("SELECT count(feedback_id) AS id FROM P2_Feedback NATURAL JOIN P2_Teaches WHERE year ='$year' AND ID ='$ID' ")->fetchAll();
+  $allRecrods = $sql[0]['id'];
+
+
+    }else {
+      
+      $course = $_SESSION['course_id'];
+$authors = $connection->query("SELECT feedback_id, course_id, pseudo_name, year, comment, rating FROM P2_Feedback NATURAL JOIN P2_Teaches WHERE course_id = '$course' AND year ='$year' AND ID ='$ID' ORDER BY rating LIMIT $paginationStart, $limit")->fetchAll();
+  // Get total records
+  $sql = $connection->query("SELECT count(feedback_id) AS id FROM P2_Feedback NATURAL JOIN P2_Teaches WHERE course_id = '$course' AND year ='$year' AND ID ='$ID' ")->fetchAll();
+  $allRecrods = $sql[0]['id'];
+
+    } 
+  }
+
+
 
   // Calculate total pages
   $totoalPages = ceil($allRecrods / $limit);
@@ -61,12 +98,27 @@ $sec = $result1[0]['sec_id'];
             </div>
 
             <ul class="list-unstyled px-2">
-                <li class=""><a href="../professor.html" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li class="active"><a href="view.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> View Feedback</a></li>
-                <li class=""><a href="../add/add.html" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-user-graduate"></i> Add Students</a></li>
+                <li class=""><a href="../index.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="active"><a href="../view/view.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> View Feedback</a></li>
+            </ul>
+            <hr class="h-color mx-2" style="color:black;">
+
+            <ul class="list-unstyled px-2">
+                <li class="">
+                    <a class="text-decoration-none px-3 py-2 d-block collaped" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false" href="#">
+                      <i class="fas fa-chevron-down"></i>
+                        Manage
+                    </a>
+                    <div class="collapse" id="dashboard-collapse">
+                      <ul class="btn-toggle-nav list-unstyled">
+                        <li><a href="../add/add_dept.html" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-university"></i> Add Department</a></li>
+                        <li><a href="../add/add_course.html" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-book-open"></i> Add Course</a></li>
+                        <li><a href="../add/add_instructor.html" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-chalkboard-teacher"></i> Add Faculty</a></li>
+                      </ul>
+                    </div>
+                  </li>
             </ul>
 
-           
 
         </div>
         <div class="content">
@@ -85,10 +137,10 @@ $sec = $result1[0]['sec_id'];
                       <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user"></i>
-                        
+                        Admin
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                          <li><a class="dropdown-item" href="../settings/settings.html">Settings</a></li>
+                          <li><a class="dropdown-item" href="../settings/settings.php">Settings</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li><a class="dropdown-item" href="Javascript:logout()">Logout</a></li>
                         </ul>
@@ -101,7 +153,6 @@ $sec = $result1[0]['sec_id'];
                   </div>
                 </div>
               </nav>
-
               <div class="dashboard-content">
 <div class="container mt-5">
         <h2 class="text-center mb-5">Professor's View</h2>
@@ -121,9 +172,9 @@ $sec = $result1[0]['sec_id'];
                 </select>
                     <select name="course_id" id="course_id" class="custom-select" style="max-width:150px">
                     <option disabled selected>Course ID</option>
-<?php 
-  $ID = $_SESSION['enroll_no'];
-  $sql = "SELECT course_id FROM P2_Teaches WHERE ID = '$ID' AND year = '$year'";
+<?php
+  $year = $_SESSION['year']; 
+  $sql = "SELECT distinct(course_id) FROM P2_Teaches where year = '$year'";
   $result = $connection->query($sql)->fetchAll();
 ?>
                     <?php foreach($result as $course_id) : ?>
@@ -131,6 +182,40 @@ $sec = $result1[0]['sec_id'];
                         <?php if(isset($_SESSION['course_id']) && $_SESSION['course_id'] == $course_id['course_id']) echo 'selected'; ?>
                         value="<?= $course_id['course_id']; ?>">
                         <?= $course_id['course_id']; ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+<select name="year" id="year" class="custom-select" style="max-width:150px">
+                    <option disabled selected>Year</option>
+                    <?php foreach([2020,2021,2022,2023] as $limit) : ?>
+                    <option
+                        <?php if(isset($_SESSION['year']) && $_SESSION['year'] == $limit) echo 'selected'; ?>
+                        value="<?= $limit; ?>">
+                        <?= $limit; ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+
+
+                </select>
+                    <select name="instructor" id="instructor" class="custom-select" style="max-width:150px">
+                    <option disabled selected>Instructor</option>
+<?php 
+  if(isset($_SESSION['year'])){
+    $year = $_SESSION['year'];
+  $sql = "SELECT distinct(ID), P2_Instructor.name FROM P2_Teaches natural join P2_Instructor where year = '$year' ";
+  $result = $connection->query($sql)->fetchAll();
+
+  }else{
+    $result = [];
+  }
+?>
+                    <?php 
+foreach($result as $instructor) : ?>
+                    <option
+                        <?php if(isset($_SESSION['instructor']) && $_SESSION['instructor'] == $instructor['ID']) echo 'selected'; ?>
+                        value="<?= $instructor['ID']; ?>">
+                        <?= $instructor['name']; ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -146,6 +231,7 @@ $sec = $result1[0]['sec_id'];
 </span>Feedback Id</th>
                     <th scope="col">Course Id</th>
                     <th scope="col">Year</th>
+
                     <th scope="col">Rating</th>
                     <th scope="col">Details</th>
                 </tr>
@@ -191,6 +277,12 @@ $sec = $result1[0]['sec_id'];
 $('#course_id').change(function () {
                 $('form').submit();
             })
+$('#year').change(function () {
+                $('form').submit();
+            })
+$('#instructor').change(function () {
+                $('form').submit();
+            })
 
         });
 
@@ -226,11 +318,11 @@ document.onreadystatechange = () => {
           console.log(this.responseText);
           const first = this.responseText.charAt(0).toUpperCase();
           const result = first + this.responseText.slice(1);
-          document.getElementById('navbarDropdown').innerHTML = '<i class="fas fa-user"></i> ' + result;
+          document.getElementById('navbarDropdown').innerHTML = '<i class="fas fa-user"></i> ' + 'Admin';
         }
       }
     };
-    xmlhttp.open('GET', '../professor.php', true);
+    xmlhttp.open('GET', '../admin.php', true);
     xmlhttp.send();
   }
 };

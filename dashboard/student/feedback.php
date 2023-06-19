@@ -2,9 +2,13 @@
 require ('../../server/connect.php');
 session_start();
 $enroll = $_SESSION['enroll_no'];
-$year = date('Y');
-$sql = "select course_id, course_title from P2_Takes natural join P2_Course where enroll_no='$enroll' AND year ='$year'";
-$result = mysqli_query($conn, $sql);
+
+$courseid = $_POST['givefeedback'];
+
+
+$sql = "select course_title from P2_Course where course_id='$courseid'";
+$result = mysqli_query($conn,$sql);
+$coursename = mysqli_fetch_array($result, MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +38,7 @@ $result = mysqli_query($conn, $sql);
             </div>
 
             <ul class="list-unstyled px-2">
-                <li class="active"><a href="professor.html" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="active"><a href="student.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-home"></i> Dashboard</a></li>
                <!-- <li class=""><a href="view/view.php" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> View Feedback</a></li>
                 <li class=""><a href="add/add.html" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-user-graduate"></i> Add Students</a></li> -->
             </ul>
@@ -78,36 +82,45 @@ $result = mysqli_query($conn, $sql);
               <div class="dashboard-content">
 
 
-    <div class="d-flex justify-content-center">
 
+<div class="d-flex justify-content-center">
+  <div class="form-group" style="width: 50%;">
+    <h3 class="text-center">Submit Feedback for <?php echo $coursename['course_title']; ?></h3>
 
-<table class="table table-bordered text-center" style="float: none; width: 50%;">
-  <thead>
-    <tr>
-      <th scope="col">Course Name</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php while ($coursename = mysqli_fetch_array($result, MYSQLI_ASSOC)): ?>
-    <tr>
-      <td><?php echo $coursename['course_title']; ?></td>
-      <td>
-        <form action="feedback.php" method="POST">
-          <?php
-            $courseId = $coursename['course_id'];
-            $sql = "SELECT COUNT(*) as countc FROM P2_Feedback NATURAL JOIN P2_Mapping WHERE course_id = '$courseId' AND year = '$year' AND enroll_no = '$enroll'";
-            $resultCount = mysqli_query($conn, $sql);
-            $rowCount = mysqli_fetch_assoc($resultCount);
-            $disabled = ($rowCount['countc'] > 0) ? 'disabled' : '';
-          ?>
-          <button type="submit" class="btn btn-primary" id="button" name="givefeedback" value="<?php echo $courseId; ?>" <?php echo $disabled; ?>>Give Feedback</button>
-        </form>
-      </td>
-    </tr>
-    <?php endwhile; ?>
-  </tbody>
-</table>
+    <form action="submission.php" method="POST">
+            <div class="form-group">
+        <label for="rating">How well did you achieve this learning goal in this course? </label>
+        <input type="number" placeholder="On the scale of 1 - 4" class="form-control" id="rating1" min="1" max="4" name="rating1" required>
+      
+      </div>
+ <div class="form-group">
+        <label for="rating">How useful were the assignments from this instructor for your learning in the course?</label>
+        <input type="number" placeholder="On the scale of 1 - 4" class="form-control" id="rating2" min="1" max="4" name="rating2" required>
+      </div>
+ <div class="form-group">
+        <label for="rating">How prepared was this instructor for section meetings?</label>
+        <input type="number" placeholder="On the scale of 1 - 4" class="form-control" id="rating3" min="1" max="4" name="rating3" required>
+      </div>
+ <div class="form-group">
+        <label for="rating">How organized was this course?</label>
+        <input type="number" placeholder="On the scale of 1 - 4" class="form-control" id="rating4" min="1" max="4" name="rating4" required>
+      </div>
+
+ <div class="form-group">
+        <label for="rating">Overall, how would you describe the quality of the instruction in this course?</label>
+        <input type="number" placeholder="On the scale of 1 - 4" class="form-control" id="rating5" min="1" max="4" name="rating5" required>
+      </div>
+<div class="form-group">
+        <label for="review">Would you like to provide any other comments about this course?</label>
+        <textarea class="form-control" id="review" rows="3" name="review"></textarea>
+      </div>
+
+      <div class="d-flex justify-content-center mt-3">
+      <button type="submit" class="btn btn-primary" name="button" value="<?php echo $courseid; ?>">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
               </div>
 
         </div>
@@ -163,8 +176,61 @@ document.onreadystatechange = () => {
   }
 };
 
- 
+ // AJAX request to fetch feedback data
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'fetch_feedback.php', true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var feedbackData = JSON.parse(xhr.responseText);
+
+          if (feedbackData.length === 0) {
+            console.error('No feedback data found.');
+            return;
+          }
+
+          // Extract course names and feedback counts
+          var courseNames = feedbackData.map(function (item) {
+            return item.courseName;
+          });
+          var feedbackCounts = feedbackData.map(function (item) {
+            return item.feedbackCount;
+          });
+
+          console.log(courseNames); // Debugging information
+          console.log(feedbackCounts); // Debugging information
+
+          // Create chart
+          var ctx = document.getElementById('feedbackChart').getContext('2d');
+          var feedbackChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: courseNames,
+              datasets: [
+                {
+                  label: 'Number of Feedback',
+                  data: feedbackCounts,
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  stepSize: 1,
+                },
+              },
+            },
+          });
+        } else {
+          console.error('Request failed. Status:', xhr.status);
+        }
+      };
+      xhr.send();
+
+
     </script>
    </body>
 </html>
-
